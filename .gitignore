@@ -56,6 +56,8 @@ credentials/
 
 # Logs, editor state, temporary test output
 *.log
+*_LOG.TXT
+*_log.txt
 *.swp
 *.swo
 *~
