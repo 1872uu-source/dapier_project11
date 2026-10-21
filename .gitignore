@@ -1,0 +1,85 @@
+# Python runtime and build products
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage*
+htmlcov/
+.venv/
+venv/
+env/
+ENV/
+
+# ROS 2 / colcon workspace outputs
+build/
+install/
+log/
+**/build/
+**/install/
+**/log/
+
+# Node and frontend output
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.vite/
+**/.vite/
+coverage/
+
+# Local environment files. Keep only explicitly named examples.
+.env
+.env.*
+**/.env
+**/.env.*
+!.env.example
+!**/.env.example
+
+# User and machine credentials
+.npmrc
+**/.npmrc
+*.pem
+*.p12
+*.pfx
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+*_credentials
+*_secrets.*
+secrets/
+credentials/
+
+# Logs, editor state, temporary test output
+*.log
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.tmp_*
+test-results/
+playwright-report/
+
+# Local model files and large training checkpoints (do not use LFS implicitly)
+*.gguf
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.engine
+*.tflite
+checkpoints/
+weights/
+models/cache/
+
+# Local package snapshots; source lockfiles and model/mesh assets remain tracked
+*.bak
+*.backup
+*.orig
+*.old

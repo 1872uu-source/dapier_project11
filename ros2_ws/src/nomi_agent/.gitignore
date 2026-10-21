@@ -1,0 +1,4 @@
+# Local NOMI credentials and environment
+.env
+.env.*
+!.env.example

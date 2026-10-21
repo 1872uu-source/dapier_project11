@@ -1,0 +1,226 @@
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+html {
+  min-height: 100%;
+  background: #f4f7fb;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+
+button, input, textarea, select {
+  touch-action: manipulation;
+}
+
+body {
+  --ui-bg: #f4f7fb;
+  --ui-fg: #172033;
+  --ui-muted: #64748b;
+  --ui-card: #ffffff;
+  --ui-card-border: #e2e8f0;
+  --ui-subcard: #f8fafc;
+  --ui-accent: #2563eb;
+}
+
+body.dark {
+  --ui-bg: #111827;
+  --ui-fg: #f1f5f9;
+  --ui-muted: #94a3b8;
+  --ui-card: #1e293b;
+  --ui-card-border: #334155;
+  --ui-subcard: #172033;
+  --ui-accent: #60a5fa;
+}
+
+.app-shell {
+  background: var(--ui-bg);
+  color: var(--ui-fg);
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.app-header { border-color: var(--ui-card-border); }
+.surface-card {
+  background: var(--ui-card);
+  border-color: var(--ui-card-border);
+  color: var(--ui-fg);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.035), 0 8px 24px rgb(15 23 42 / 0.035);
+}
+.surface-subcard {
+  background: var(--ui-subcard);
+  border-color: var(--ui-card-border);
+  color: var(--ui-fg);
+}
+.toolbar-button, .status-pill {
+  border-color: var(--ui-card-border);
+  background: var(--ui-card);
+  color: var(--ui-muted);
+}
+.toolbar-button:hover { color: var(--ui-accent); border-color: var(--ui-accent); }
+.secondary-button {
+  border-color: var(--ui-card-border);
+  background: var(--ui-subcard);
+  color: var(--ui-fg);
+}
+.secondary-button:hover { background: color-mix(in srgb, var(--ui-accent) 8%, var(--ui-card)); }
+.speed-input {
+  border-color: var(--ui-card-border);
+  background: var(--ui-card);
+  color: var(--ui-accent);
+}
+.model-select { border-color: var(--ui-card-border); background: var(--ui-card); }
+.mobile-nav {
+  border-color: var(--ui-card-border);
+  background: color-mix(in srgb, var(--ui-card) 94%, transparent);
+  box-shadow: 0 -8px 24px rgb(15 23 42 / 0.08);
+}
+.mobile-nav-button { color: var(--ui-muted); }
+.mobile-nav-button.is-active { background: #eff6ff; color: #1d4ed8; }
+body.dark .mobile-nav-button.is-active { background: #1e3a5f; color: #bfdbfe; }
+body.dark .dark-panel { background: var(--ui-card); }
+body.dark .dark-panel .model-select,
+body.dark .dark-panel textarea { border-color: var(--ui-card-border); background: var(--ui-subcard); color: var(--ui-fg); }
+body.dark .dark-panel [aria-live] { background: var(--ui-subcard); }
+body.dark .surface-subcard .text-slate-100 { color: var(--ui-fg); }
+.chat-input { border-color: var(--ui-card-border); background: var(--ui-card); color: var(--ui-fg); }
+.chat-input::placeholder { color: var(--ui-muted); }
+
+@media (max-width: 639px) {
+  .game-simulation-viewport {
+    border-radius: 1rem;
+  }
+
+  .pilot-control-grid {
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .pilot-joystick {
+    width: 142px;
+    height: 142px;
+  }
+
+  .pilot-joystick-group {
+    gap: 0.75rem;
+  }
+
+  .pilot-rotate button {
+    min-height: 44px;
+    padding-inline: 0.65rem;
+  }
+
+  .pilot-actions {
+    display: grid;
+    width: 100%;
+    grid-template-columns: minmax(86px, 0.7fr) minmax(0, 1.3fr);
+  }
+
+  .pilot-actions > button {
+    min-height: 52px;
+    padding-inline: 0.65rem;
+    font-size: 0.68rem;
+  }
+}
+
+/* In short landscape viewports, keep the arena and the selected controls side by side. */
+@media (orientation: landscape) and (max-height: 620px) and (max-width: 1279px) {
+  main > div:first-child {
+    display: grid;
+    width: 100%;
+    max-width: none;
+    min-height: 100svh;
+    grid-template-columns: minmax(0, 1.45fr) minmax(290px, 0.9fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-areas: "head head" "arena controls" "foot foot";
+    align-items: start;
+    gap: 0 0.75rem;
+    padding: max(0.35rem, env(safe-area-inset-top)) 0.65rem calc(4.25rem + env(safe-area-inset-bottom));
+  }
+
+  main > div:first-child > header {
+    grid-area: head;
+    margin-bottom: 0.45rem;
+    padding-bottom: 0.45rem;
+  }
+
+  .mobile-dashboard-grid {
+    grid-area: arena;
+    min-width: 0;
+    display: block;
+  }
+
+  .mobile-dashboard-grid > section > div:first-child {
+    display: none;
+  }
+
+  .mobile-dashboard-grid .game-simulation-viewport {
+    height: calc(100svh - 6.5rem - env(safe-area-inset-top));
+    min-height: 220px;
+    max-height: none;
+  }
+
+  .mobile-control-panel {
+    grid-area: controls;
+    min-width: 0;
+    max-height: calc(100svh - 6.5rem - env(safe-area-inset-top));
+    margin-top: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .pilot-control-deck {
+    padding: 0.65rem;
+  }
+
+  .pilot-control-deck > div:first-child {
+    gap: 0.5rem;
+  }
+
+  .pilot-control-grid {
+    justify-content: center;
+    gap: 0.55rem;
+    padding-top: 0.6rem;
+    margin-top: 0.6rem;
+  }
+
+  .pilot-joystick {
+    width: 112px;
+    height: 112px;
+  }
+
+  .pilot-joystick-group {
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .pilot-rotate button {
+    min-height: 36px;
+    padding: 0.35rem 0.5rem;
+  }
+
+  .pilot-actions {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 0.7fr 1.3fr;
+  }
+
+  .pilot-actions > button {
+    min-height: 42px;
+    padding: 0.45rem;
+    font-size: 0.62rem;
+  }
+}

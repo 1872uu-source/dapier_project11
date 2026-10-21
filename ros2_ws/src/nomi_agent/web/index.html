@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NOMI</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5}
+.app{max-width:720px;min-height:100vh;margin:auto;background:white;display:flex;flex-direction:column}
+header{padding:18px;border-bottom:1px solid #ddd;font-size:22px;font-weight:bold}
+#status{padding:8px 18px;border-bottom:1px solid #eee;font-size:13px}
+#chat{flex:1;padding:18px;overflow-y:auto}
+.message{margin:10px 0;padding:12px;border-radius:12px;max-width:85%;white-space:pre-wrap}
+.user{margin-left:auto;background:#e8f0ff}
+.nomi{background:#eee}
+form{display:flex;gap:8px;padding:12px;border-top:1px solid #ddd}
+input{flex:1;padding:13px;font-size:16px}
+button{padding:0 18px}
+</style>
+</head>
+<body>
+<div class="app">
+<header>NOMI</header>
+<div id="status">서버 확인 중...</div>
+<div id="chat"></div>
+<form id="chat-form">
+<input id="message" placeholder="메시지를 입력하세요..." autocomplete="off">
+<button type="submit">전송</button>
+</form>
+</div>
+
+<script>
+const chat=document.getElementById("chat");
+const status=document.getElementById("status");
+const form=document.getElementById("chat-form");
+const input=document.getElementById("message");
+
+let lastResponse="";
+
+function addMessage(text,type){
+    const div=document.createElement("div");
+    div.className="message "+type;
+    div.textContent=text;
+    chat.appendChild(div);
+    chat.scrollTop=chat.scrollHeight;
+}
+
+async function checkStatus(){
+    try{
+        const response=await fetch("/api/status");
+        const data=await response.json();
+        status.textContent=data.ros2 ? "NOMI 연결됨" : "ROS2 연결 대기";
+    }catch(error){
+        status.textContent="서버 연결 실패";
+    }
+}
+
+async function pollResponse(){
+    try{
+        const response=await fetch("/api/response");
+        const data=await response.json();
+
+        if(data.success && data.message && data.message!==lastResponse){
+            lastResponse=data.message;
+            addMessage(data.message,"nomi");
+        }
+    }catch(error){
+        console.error(error);
+    }
+}
+
+form.addEventListener("submit",async(event)=>{
+    event.preventDefault();
+
+    const text=input.value.trim();
+
+    if(!text){
+        return;
+    }
+
+    addMessage(text,"user");
+    input.value="";
+
+    try{
+        await fetch("/api/chat",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({message:text})
+        });
+    }catch(error){
+        addMessage("서버 전송 실패: "+error,"nomi");
+    }
+
+    input.focus();
+});
+
+checkStatus();
+setInterval(checkStatus,3000);
+setInterval(pollResponse,500);
+input.focus();
+</script>
+</body>
+</html>

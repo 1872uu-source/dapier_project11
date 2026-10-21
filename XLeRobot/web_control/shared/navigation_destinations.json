@@ -1,0 +1,10 @@
+{
+  "frame_id": "xlerobot_map",
+  "source": "mujoco_static",
+  "destinations": [
+    { "name": "테이블 1", "aliases": ["1번 테이블", "1번테이블"], "x": -2.45, "y": -0.4, "kind": "table_approach" },
+    { "name": "테이블 2", "aliases": ["2번 테이블", "2번테이블"], "x": 0.0, "y": 1.5, "kind": "table_approach" },
+    { "name": "테이블 3", "aliases": ["3번 테이블", "3번테이블"], "x": 2.45, "y": -0.4, "kind": "table_approach" },
+    { "name": "충전 위치", "aliases": ["충전소", "충전 도크"], "x": -3.8, "y": 6.8, "kind": "charging" }
+  ]
+}

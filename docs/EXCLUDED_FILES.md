@@ -1,0 +1,107 @@
+# 전달 패키지 제외 항목 기록
+
+이 목록은 기존 NOMI_TEAM_HANDOFF의 원본 선정 감사에서 실제 참조를 검토해 제외한 항목을 기록합니다. 이전 감사는 13,269개 파일을 선정 경로 후보에서 제외했다고 집계했습니다. 해당 수치는 이 저장소에서 Git이 무시하는 파일 수가 아니라, 원본 전체 중 이전 인수인계 패키지 범위에서 제외된 파일 수입니다. 새로 추가되는 파일은 본 저장소 .gitignore 규칙을 따릅니다.
+
+제외 파일/폴더 및 근거 (생성 캐시 폴더는 내부 파일 수를 표기)
+
+- XLeRobot/simulation/Isaac_sim, Maniskill 및 기타 플랫폼별 폴더 — 현재 MuJoCo+웹앱 실행 경로에서 참조되지 않는 별도 시뮬레이션 플랫폼
+- XLeRobot/simulation/mujoco/.tmp_gr5aatqq_range_regression.xml — 임시 시뮬레이션 산출물 또는 참조되지 않는 압축 스냅샷
+- XLeRobot/simulation/mujoco/__pycache__ — Python 바이트코드 캐시 (2개 파일)
+- XLeRobot/simulation/mujoco/drive_frame.py.bak_full_diag_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/simulation/mujoco/obstacle_scan.py.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/simulation/mujoco/scene.xml.backup_indoor_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/simulation/mujoco/tests/__pycache__ — Python 바이트코드 캐시 (8개 파일)
+- XLeRobot/simulation/mujoco/tests/test_drive_frame.py.bak_full_diag_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/simulation/mujoco/tests/test_obstacle_scan.py.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/NOMI_ARK_API_KEY_설정_가이드.md — 현재 Qwen3.5 실행에 필요 없는 별도 Ark API 설정 안내; 키 값은 없지만 범위 밖
+- XLeRobot/web_control/PPT_OUTLINE_XLEROBOT.md — 발표자료 기획 문서로 실행·통합에 사용되지 않음
+- XLeRobot/web_control/client.zip — 임시 시뮬레이션 산출물 또는 참조되지 않는 압축 스냅샷
+- XLeRobot/web_control/client/dist — 프런트엔드 빌드 산출물 (4개 파일)
+- XLeRobot/web_control/client/node_modules — lockfile에서 재생성되는 패키지 캐시 (9389개 파일)
+- XLeRobot/web_control/client/scripts/test_indoor_map.mjs.bak_full_diag_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/client/scripts/test_indoor_map.mjs.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/client/src/App.tsx.bak_boundary_guard_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/client/src/App.tsx.bak_nav_stabilization_20261019 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/client/src/App.tsx.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/client/src/App.tsx.bak_yaw_damping_20261020 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/client/src/components/features/DestinationNavigator.tsx.bak_readiness_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/client/src/components/features/GameSimulationCanvas.tsx.bak_live_pose_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/client/src/hooks/useSocket.ts.bak_backend_reconnect_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/client/src/hooks/useSocket.ts.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/client/src/types/index.ts.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/client/src/utils/navigationController.ts.bak_yaw_damping_20261020 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/client/src/utils/pathPlanner.ts.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/memo1 — 일반 메모로 런타임/인수인계/검증에 사용되지 않음
+- XLeRobot/web_control/server.zip — 임시 시뮬레이션 산출물 또는 참조되지 않는 압축 스냅샷
+- XLeRobot/web_control/server/.env — 로컬 비밀값/사용자별 설정 가능; 예제 파일만 포함
+- XLeRobot/web_control/server/.pytest_cache — pytest 캐시 (6개 파일)
+- XLeRobot/web_control/server/.venv — 로컬 Python 가상환경 (3713개 파일)
+- XLeRobot/web_control/server/__pycache__ — Python 바이트코드 캐시 (1개 파일)
+- XLeRobot/web_control/server/api/__pycache__ — Python 바이트코드 캐시 (2개 파일)
+- XLeRobot/web_control/server/core/__pycache__ — Python 바이트코드 캐시 (8개 파일)
+- XLeRobot/web_control/server/core/nomi_bridge.py.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/server/dev/__pycache__ — Python 바이트코드 캐시 (1개 파일)
+- XLeRobot/web_control/server/main.py.bak_backend_reconnect_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/server/main.py.bak_boundary_guard_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/server/main.py.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/server/main.py.bak_state-decoration_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/server/tests/__pycache__ — Python 바이트코드 캐시 (7개 파일)
+- XLeRobot/web_control/server/tests/test_nomi_web_integration.py.bak_boundary_guard_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/server/tests/test_nomi_web_integration.py.bak_connection_retry_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/server/tests/test_nomi_web_integration.py.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- XLeRobot/web_control/server/tests/test_nomi_web_integration.py.bak_state-decoration_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/SO-ARM100 — 별도 암 저장소; 현재 NOMI 코드의 활성 import/launch에서 참조되지 않으며 팀원 모델로 추정하지 않음
+- ros2_ws/src/mini_nomi_arm_bringup (선택 조사 범위 밖) — 별도 SO-101 MuJoCo/ros2_control 데모이며 NOMI 활성 launch/Tool 경로가 참조하지 않음; ROS package.xml의 의존성이 추가로 필요한 독립 통합 후보
+- ros2_ws/src/mujoco_ros2_control — 별도 ros2_control 패키지 스택이며 현재 NOMI MuJoCo Host 런타임에서 사용하지 않음
+- ros2_ws/src/mujoco_vendor — 포함한 NOMI 패키지의 선언/실행 의존성이 아님; 별도 mujoco_ros2_control stack용 vendor 패키지
+- ros2_ws/src/nomi_agent/.env — 로컬 비밀값/사용자별 설정 가능; 예제 파일만 포함
+- ros2_ws/src/nomi_agent/.pytest_cache — pytest 캐시 (6개 파일)
+- ros2_ws/src/nomi_agent/nomi_agent/__pycache__ — Python 바이트코드 캐시 (6개 파일)
+- ros2_ws/src/nomi_agent/nomi_agent/agent_node.py.backup_rebuild_20260917_172150 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/agent_node.py.bak — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/agent_node.py.bak_safety_20261013_115801 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/agent_node.py.bak_web_llm_sync_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/agent_node.py.pre_harness_20261015 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/core/__pycache__ — Python 바이트코드 캐시 (4개 파일)
+- ros2_ws/src/nomi_agent/nomi_agent/core/execution_harness.py.bak — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/core/execution_harness.py.bak_web_llm_sync_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/core/task_manager.py.bak — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/formatters/__pycache__ — Python 바이트코드 캐시 (2개 파일)
+- ros2_ws/src/nomi_agent/nomi_agent/llm_client.py.backup_rebuild_20260917_171612 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/llm_client.py.backup_v3_20260918_155545 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/llm_client.py.bak — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/llm_client.py.bak_lookup_prompt_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/llm_client.py.bak_model_identity_fix_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/llm_client.py.bak_model_identity_prompt_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/llm_client.py.bak_tool_route_prompt_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/llm_provider.py.bak — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/models/__pycache__ — Python 바이트코드 캐시 (2개 파일)
+- ros2_ws/src/nomi_agent/nomi_agent/safety_guard.py.bak_web_llm_sync_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/safety_guard.py.pre_harness_20261015 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/skills/__pycache__ — Python 바이트코드 캐시 (6개 파일)
+- ros2_ws/src/nomi_agent/nomi_agent/skills/navigation_skill.py.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/skills/state_skill.py.bak_web_llm_sync_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/tool_registry.py.bak — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/tool_registry.py.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/tool_registry.py.bak_web_llm_sync_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/nomi_agent/tool_registry.py.pre_harness_20261015 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/server/__pycache__ — Python 바이트코드 캐시 (1개 파일)
+- ros2_ws/src/nomi_agent/server/main.py.backup_rebuild_20260917_173411 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/server/main.py.backup_rebuild_20260918_145903 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/server/main.py.backup_step20 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/server/main.py.backup_step23 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/tests/__pycache__ — Python 바이트코드 캐시 (22개 파일)
+- ros2_ws/src/nomi_agent/tests/test_ros2_safe_integration.py.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_agent/tests/test_skill_compatibility.py.bak_navfailure_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_rviz_bridge/nomi_rviz_bridge/__pycache__ — Python 바이트코드 캐시 (2개 파일)
+- ros2_ws/src/nomi_rviz_bridge/package.xml.bak_nom_email_20261020 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_rviz_bridge/setup.py.bak_nom_email_20261020 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_xlerobot_sim/launch/xlerobot_state.launch.py.bak_nomi_rviz_enable_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_xlerobot_sim/launch/xlerobot_state.launch.py.bak_nomi_rviz_tf_option_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_xlerobot_sim/nomi_xlerobot_sim/__pycache__ — Python 바이트코드 캐시 (2개 파일)
+- ros2_ws/src/nomi_xlerobot_sim/nomi_xlerobot_sim/mujoco_host.py.bak_full_diag_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_xlerobot_sim/nomi_xlerobot_sim/mujoco_host.py.bak_full_diag_stage2_20261016 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_xlerobot_sim/nomi_xlerobot_sim/mujoco_host.py.bak_live_trace_20261020 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_xlerobot_sim/nomi_xlerobot_sim/mujoco_host.py.bak_zmq_nonblocking_20261019 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_xlerobot_sim/package.xml.bak_nomi_rviz_enable_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님
+- ros2_ws/src/nomi_xlerobot_sim/rviz/xlerobot.rviz.bak_nomi_rviz_enable_20261021 — 백업/이전 파일; 활성 코드의 import/경로 참조 대상이 아님

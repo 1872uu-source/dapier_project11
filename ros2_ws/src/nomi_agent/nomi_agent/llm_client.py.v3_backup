@@ -1,0 +1,629 @@
+import json
+import ollama
+
+
+class LLMClient:
+
+    def __init__(
+        self,
+        router_model="qwen2.5:7b",
+        worker_model="hermes3:8b",
+        max_history=12,
+    ):
+
+        self.router_model = router_model
+        self.worker_model = worker_model
+
+        # 최근 대화 기억
+        self.conversation_history = []
+
+        # 너무 많은 대화를 계속 보내지 않도록 제한
+        self.max_history = max_history
+
+    # =========================================================
+    # Conversation Memory
+    # =========================================================
+
+    def add_user_message(self, text: str):
+
+        self.conversation_history.append(
+            {
+                "role": "user",
+                "content": text,
+            }
+        )
+
+        self._trim_history()
+
+    def add_assistant_message(self, text: str):
+
+        if not text:
+            return
+
+        self.conversation_history.append(
+            {
+                "role": "assistant",
+                "content": text,
+            }
+        )
+
+        self._trim_history()
+
+    def _trim_history(self):
+
+        if len(self.conversation_history) > self.max_history:
+
+            self.conversation_history = (
+                self.conversation_history[
+                    -self.max_history:
+                ]
+            )
+
+    def clear_history(self):
+
+        self.conversation_history = []
+
+    def get_history(self):
+
+        return list(
+            self.conversation_history
+        )
+
+    # =========================================================
+    # Router
+    # =========================================================
+
+    def route_command(
+        self,
+        user_text: str,
+    ) -> dict:
+
+        system_prompt = """
+당신은 NOMI 로봇 AI 시스템의 Router이다.
+
+당신의 역할은 사용자의 현재 발화를 분석하여
+CHAT 또는 TASK로 분류하고,
+TASK라면 적절한 도구 intent와 arguments를 결정하는 것이다.
+
+반드시 JSON 하나만 반환한다.
+
+JSON 형식:
+
+{
+  "route": "CHAT" 또는 "TASK",
+  "type": "chat" 또는 "task",
+  "intent": "도구 이름 또는 빈 문자열",
+  "arguments": {},
+  "reply": "CHAT일 때 답변"
+}
+
+==================================================
+사용 가능한 TASK
+==================================================
+
+navigate_to
+open_gripper
+close_gripper
+pick_object
+place_object
+get_robot_state
+get_user_location
+get_weather
+
+==================================================
+TASK 규칙
+==================================================
+
+실제 정보를 확인하거나 로봇의 동작이 필요한 요청은
+반드시 TASK로 분류한다.
+
+------------------------------
+날씨
+------------------------------
+
+다음은 모두 TASK이다.
+
+- 오늘 날씨 어때?
+- 지금 날씨 알려줘
+- 서울 날씨 알려줘
+- 종로구 날씨 어때?
+- 비 와?
+- 지금 기온 몇 도야?
+
+intent:
+
+get_weather
+
+도시가 있으면:
+
+{
+  "route": "TASK",
+  "type": "task",
+  "intent": "get_weather",
+  "arguments": {
+    "city": "서울"
+  },
+  "reply": ""
+}
+
+도시가 없으면:
+
+{
+  "route": "TASK",
+  "type": "task",
+  "intent": "get_weather",
+  "arguments": {},
+  "reply": ""
+}
+
+도시가 없다는 이유로 CHAT으로 분류하지 않는다.
+
+------------------------------
+사용자 위치
+------------------------------
+
+- 내 위치 알려줘
+- 내가 어디 있어?
+- 현재 위치 확인해줘
+- 인터넷으로 내 위치 알아봐
+
+intent:
+
+get_user_location
+
+------------------------------
+로봇 상태
+------------------------------
+
+- 로봇 상태 알려줘
+- 로봇 괜찮아?
+- 현재 로봇 상태 확인해줘
+
+intent:
+
+get_robot_state
+
+------------------------------
+그리퍼
+------------------------------
+
+그리퍼를 열라는 요청:
+
+open_gripper
+
+그리퍼를 닫으라는 요청:
+
+close_gripper
+
+------------------------------
+물체 집기
+------------------------------
+
+예:
+
+- 컵 집어
+- 수건 집어
+- 분홍색 수건 집어
+
+intent:
+
+pick_object
+
+예:
+
+{
+  "object_name": "분홍색 수건"
+}
+
+------------------------------
+물체 놓기
+------------------------------
+
+예:
+
+- 식탁에 놔
+- 책상에 놓아
+- 저기에 놔
+
+intent:
+
+place_object
+
+예:
+
+{
+  "location": "식탁"
+}
+
+------------------------------
+이동
+------------------------------
+
+예:
+
+- 주방으로 가
+- 거실로 이동해
+- 현관으로 가
+
+intent:
+
+navigate_to
+
+예:
+
+{
+  "location": "주방"
+}
+
+==================================================
+대화 문맥
+==================================================
+
+현재 사용자의 발화만 보고 판단하지 않는다.
+
+아래의 대화 기록을 반드시 참고한다.
+
+예:
+
+사용자:
+오늘 날씨 어때?
+
+NOMI:
+서울 날씨를 확인해볼게요.
+
+사용자:
+그래 확인해줘
+
+이 경우 "그래 확인해줘"는 이전 날씨 요청의
+후속 발화이므로 TASK로 판단해야 한다.
+
+결과:
+
+{
+  "route": "TASK",
+  "type": "task",
+  "intent": "get_weather",
+  "arguments": {
+    "city": "서울"
+  },
+  "reply": ""
+}
+
+또 다른 예:
+
+사용자:
+분홍색 수건 집어
+
+NOMI:
+분홍색 수건을 집겠습니다.
+
+사용자:
+식탁에 놔
+
+현재 발화만 보면 장소만 있지만
+이전 작업과 연결해서 다음 작업을 수행해야 한다.
+
+intent:
+
+place_object
+
+arguments:
+
+{
+  "location": "식탁"
+}
+
+==================================================
+CHAT
+==================================================
+
+실제 도구가 필요 없는 일반 대화만 CHAT이다.
+
+예:
+
+- 안녕
+- 고마워
+- 너는 누구야?
+- 뭐 하고 있어?
+- 재미있는 이야기 해줘
+
+==================================================
+중요
+==================================================
+
+날씨 / 위치 / 로봇 상태 / 이동 /
+그리퍼 / 물체 조작은 TASK이다.
+
+후속 발화는 이전 대화 문맥을 사용한다.
+
+"그래"
+"확인해줘"
+"그거 해줘"
+"그럼?"
+"거기로 가"
+"거기에 놔"
+"그것도 해줘"
+
+같은 표현은 이전 대화와 연결해서 해석한다.
+
+반드시 유효한 JSON만 반환한다.
+
+JSON 이외의 설명은 출력하지 않는다.
+"""
+
+        # 현재 사용자 입력을 history에 추가
+        self.add_user_message(user_text)
+
+        messages = [
+            {
+                "role": "system",
+                "content": system_prompt,
+            }
+        ]
+
+        # 최근 대화 추가
+        messages.extend(
+            self.conversation_history
+        )
+
+        response = ollama.chat(
+            model=self.router_model,
+            messages=messages,
+            format="json",
+        )
+
+        content = response.message.content or ""
+
+        try:
+
+            result = json.loads(content)
+
+        except json.JSONDecodeError:
+
+            result = {
+                "route": "CHAT",
+                "type": "chat",
+                "intent": "",
+                "arguments": {},
+                "reply": content,
+            }
+
+        return {
+            "route": result.get(
+                "route",
+                "CHAT",
+            ),
+            "type": result.get(
+                "type",
+                "chat",
+            ),
+            "intent": result.get(
+                "intent",
+                "",
+            ),
+            "arguments": (
+                result.get(
+                    "arguments",
+                    {},
+                )
+                or {}
+            ),
+            "reply": result.get(
+                "reply",
+                "",
+            ),
+        }
+
+    # =========================================================
+    # Hermes Worker + Tool Calling
+    # =========================================================
+
+    def run_worker_with_tools(
+        self,
+        user_text: str,
+        initial_intent: str,
+        initial_arguments: dict,
+        tool_schemas: list[dict],
+        tool_executor,
+        max_rounds: int = 8,
+    ) -> str:
+
+        worker_system_prompt = """
+당신은 NOMI의 Worker AI이다.
+
+사용자의 요청을 실제 Tool Calling을 이용하여 수행한다.
+
+사용 가능한 도구:
+
+navigate_to
+open_gripper
+close_gripper
+pick_object
+place_object
+get_robot_state
+get_user_location
+get_weather
+
+==================================================
+도구 사용 규칙
+==================================================
+
+1. 실제 정보가 필요한 경우 반드시 도구를 사용한다.
+
+2. 날씨 요청에서 도시가 없다면:
+
+get_user_location
+
+을 먼저 호출한다.
+
+3. get_user_location 결과에서 city를 확인한 뒤:
+
+get_weather
+
+를 호출한다.
+
+4. 물체를 집은 뒤 사용자가
+"거기에 놔", "식탁에 놔" 등의 명령을 하면
+이전 대화 문맥을 이용한다.
+
+5. 작업 결과를 확인한 후 최종 답변을 작성한다.
+
+6. 최종 답변은 한국어로 한다.
+
+7. 이미 도구를 실행한 경우 같은 도구를
+불필요하게 반복 호출하지 않는다.
+
+8. 사용자의 요청이 완료되면 짧고 명확하게 설명한다.
+"""
+
+        messages = [
+            {
+                "role": "system",
+                "content": worker_system_prompt,
+            }
+        ]
+
+        # 현재 대화 전체를 Worker에게도 제공
+        messages.extend(
+            self.conversation_history
+        )
+
+        # Router의 판단을 Worker에게 명시
+        messages.append(
+            {
+                "role": "system",
+                "content": (
+                    "Qwen Router의 초기 판단:\n"
+                    f"intent={initial_intent}\n"
+                    f"arguments="
+                    f"{json.dumps(initial_arguments, ensure_ascii=False)}"
+                ),
+            }
+        )
+
+        for round_index in range(max_rounds):
+
+            response = ollama.chat(
+                model=self.worker_model,
+                messages=messages,
+                tools=tool_schemas,
+            )
+
+            assistant_message = response.message
+
+            tool_calls = (
+                assistant_message.tool_calls
+                or []
+            )
+
+            # Tool Call이 없으면 최종 답변
+            if not tool_calls:
+
+                final_text = (
+                    assistant_message.content
+                    or ""
+                )
+
+                return final_text
+
+            # Assistant Tool Call 메시지를
+            # 다음 요청의 문맥에 추가
+            messages.append(
+                {
+                    "role": "assistant",
+                    "content": (
+                        assistant_message.content
+                        or ""
+                    ),
+                    "tool_calls": [
+                        {
+                            "function": {
+                                "name": call.function.name,
+                                "arguments": dict(
+                                    call.function.arguments
+                                    or {}
+                                ),
+                            }
+                        }
+                        for call in tool_calls
+                    ],
+                }
+            )
+
+            # Tool 실행
+            for call in tool_calls:
+
+                tool_name = (
+                    call.function.name
+                )
+
+                arguments = dict(
+                    call.function.arguments
+                    or {}
+                )
+
+                print(
+                    "========================================"
+                )
+                print(
+                    f"[Hermes] Tool Call: {tool_name}"
+                )
+                print(
+                    f"[Hermes] Arguments: {arguments}"
+                )
+
+                try:
+
+                    result = tool_executor(
+                        tool_name,
+                        arguments,
+                    )
+
+                    if hasattr(
+                        result,
+                        "success",
+                    ):
+
+                        result_data = {
+                            "success": result.success,
+                            "message": result.message,
+                            "data": result.data,
+                        }
+
+                    else:
+
+                        result_data = {
+                            "success": True,
+                            "message": str(result),
+                        }
+
+                except Exception as exc:
+
+                    result_data = {
+                        "success": False,
+                        "message": (
+                            f"Tool 실행 오류: {exc}"
+                        ),
+                    }
+
+                print(
+                    f"[Hermes] Tool Result: "
+                    f"{result_data}"
+                )
+
+                # Tool 결과를 Worker에게 전달
+                messages.append(
+                    {
+                        "role": "tool",
+                        "content": json.dumps(
+                            result_data,
+                            ensure_ascii=False,
+                            default=str,
+                        ),
+                    }
+                )
+
+        return (
+            "도구 호출이 너무 많이 반복되어 "
+            "작업을 종료했습니다."
+        )

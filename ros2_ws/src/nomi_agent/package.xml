@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>nomi_agent</name>
+  <version>0.0.1</version>
+
+  <description>
+    NOMI LLM-based robot command agent
+  </description>
+
+  <maintainer email="user@example.com">user</maintainer>
+
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <exec_depend>python3-openai</exec_depend>
+  <exec_depend>python3-dotenv</exec_depend>
+  <exec_depend>python3-requests</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
